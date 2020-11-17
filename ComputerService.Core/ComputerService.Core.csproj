@@ -6,23 +6,23 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\Services\" />
-    <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Dto\Response\" />
     <Folder Include="Dto\Request\" />
-    <Folder Include="Models\" />
-    <Folder Include="MappingConfiguration\" />
-    <Folder Include="Validators\" />
+    <Folder Include="Exceptions\" />
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="FluentValidation" Version="9.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ComputerService.Common\ComputerService.Common.csproj" />
     <ProjectReference Include="..\ComputerService.Data\ComputerService.Data.csproj" />
   </ItemGroup>
 
