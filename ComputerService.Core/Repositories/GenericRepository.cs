@@ -1,7 +1,7 @@
 ﻿using ComputerService.Common.Helpers;
 using ComputerService.Core.Exceptions;
 using ComputerService.Core.Extensions;
-using ComputerService.Core.Services;
+using ComputerService.Core.Interfaces.Repositories;
 using ComputerService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

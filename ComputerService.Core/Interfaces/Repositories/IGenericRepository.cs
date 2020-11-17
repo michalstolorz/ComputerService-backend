@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ComputerService.Core.Services
+namespace ComputerService.Core.Interfaces.Repositories
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
@@ -92,7 +92,9 @@ namespace ComputerService.Core.Services
             Func<TEntity, dynamic> distinctBy = null);
 
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken);
+
         Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entity, CancellationToken cancellationToken);
+
         Task<TEntity> GetByIdAsync<TId>(TId id,
             CancellationToken cancellationToken,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);

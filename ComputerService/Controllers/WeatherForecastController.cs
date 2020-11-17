@@ -27,7 +27,7 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// First endpoint
+        /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
