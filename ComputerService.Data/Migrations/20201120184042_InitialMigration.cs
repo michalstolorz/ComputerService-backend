@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ComputerService.Data.Migrations
 {
-    public partial class DatabaseInitialization : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -125,11 +125,12 @@ namespace ComputerService.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RepairCost = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    RepairCost = table.Column<decimal>(type: "decimal(8,2)", nullable: true),
                     CreateDateTime = table.Column<DateTime>(type: "datetime2(0)", nullable: false),
-                    FinishDateTime = table.Column<DateTime>(type: "datetime2(0)", nullable: false),
+                    FinishDateTime = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    InvoiceId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,7 +140,7 @@ namespace ComputerService.Data.Migrations
                         column: x => x.InvoiceId,
                         principalTable: "Invoice",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Repair_User_UserId",
                         column: x => x.UserId,

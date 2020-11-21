@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputerService.Common.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace ComputerService.Core.Models
@@ -13,6 +14,7 @@ namespace ComputerService.Core.Models
         public UserModel UserModel { get; set; }
         public int InvoiceId { get; set; }
         public InvoiceModel InvoiceModel { get; set; }
+        public EnumStatus Status;
         public virtual ICollection<RequiredRepairTypeModel> RequiredRepairTypesModel { get; set; }
         public virtual ICollection<UsedPartModel> UsedPartsModel { get; set; }
     }

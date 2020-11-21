@@ -16,6 +16,10 @@ using ComputerService.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using ComputerService.Core.MappingConfiguration;
+using Microsoft.AspNetCore.Http;
+using ComputerService.Core.Services;
+using ComputerService.Core.Repositories;
+using NetCore.AutoRegisterDi;
 
 namespace ComputerService
 {
@@ -31,6 +35,9 @@ namespace ComputerService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.RegisterAssemblyPublicNonGenericClasses(typeof(RepairService).Assembly).Where(x => x.Name.EndsWith("Service")).AsPublicImplementedInterfaces();
+            services.RegisterAssemblyPublicNonGenericClasses(typeof(RepairRepository).Assembly).Where(x => x.Name.EndsWith("Repository")).AsPublicImplementedInterfaces();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -42,9 +49,11 @@ namespace ComputerService
 
             IMapper mapper = mappingConfiguration.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddHttpContextAccessor();
 
             services.AddControllers();
 
+            services.AddMvc();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",

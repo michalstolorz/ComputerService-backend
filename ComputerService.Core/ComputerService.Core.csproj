@@ -5,12 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
-    <Folder Include="Dto\Response\" />
-    <Folder Include="Dto\Request\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Services\" />
-    <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
