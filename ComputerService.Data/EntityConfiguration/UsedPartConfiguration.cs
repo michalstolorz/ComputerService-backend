@@ -10,6 +10,10 @@ namespace ComputerService.Data.EntityConfiguration
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Quantity)
+                .HasColumnType("decimal(3,0)")
+                .IsRequired();
+
             builder.Property(x => x.RepairId)
                 .IsRequired();
 

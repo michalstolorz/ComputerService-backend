@@ -27,6 +27,9 @@ namespace ComputerService.Data.EntityConfiguration
                 .IsRequired();
 
             builder.Property(x => x.InvoiceId);
+
+            builder.Property(x => x.Description)
+                .HasMaxLength(500);
         }
     }
 }

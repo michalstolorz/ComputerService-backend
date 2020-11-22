@@ -42,6 +42,14 @@ namespace ComputerService
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             var mappingConfiguration = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new Configuration());

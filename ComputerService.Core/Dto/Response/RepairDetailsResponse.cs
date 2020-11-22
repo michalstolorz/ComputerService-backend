@@ -23,6 +23,7 @@ namespace ComputerService.Core.Dto.Response
         public string CustomerPhoneNumber { get; set; }
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
+        public string Description { get; set; }
         public ICollection<Part> PartsUsedInRepair { get; set; }
         public ICollection<RepairType> RepairTypes { get; set; }
     }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
-using ComputerService.Core.Models;
 using ComputerService.Data.Models;
 using Microsoft.AspNetCore.Http;
 using ComputerService.Common.Enums;
@@ -17,6 +16,7 @@ using ComputerService.Core.Validators;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ComputerService.Core.Exceptions;
+using System.Linq.Expressions;
 
 namespace ComputerService.Core.Services
 {
@@ -66,12 +66,40 @@ namespace ComputerService.Core.Services
 
             if (result == null)
             {
-                throw new ServiceException(ErrorCodes.RecruitmentCandidatetWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
 
             var mapped = _mapper.Map<RepairDetailsResponse>(result);
 
             return mapped;
+        }
+
+        public async Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken)
+        {
+            if(request == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Parameter {request} cannot be null.");
+            }
+
+            var predicate = CreatePredicate(request);
+
+            var result = await _repairRepository.GetAsync(predicate, cancellationToken,
+                include: x => x
+                .Include(x => x.Customer));
+
+            return _mapper.Map<List<GetRepairsResponse>>(result);
+        }
+
+        private Expression<Func<Repair, bool>> CreatePredicate(GetRepairsRequest request)
+        {
+            Expression<Func<Repair, bool>> predicate = x =>
+                (!request.Id.HasValue || x.Id.Equals(request.Id)) &&
+                (string.IsNullOrEmpty(request.CustomerFirstName) || x.Customer.FirstName.Contains(request.CustomerFirstName)) &&
+                (string.IsNullOrEmpty(request.CustomerLastName) || x.Customer.LastName.Contains(request.CustomerLastName)) &&
+                (string.IsNullOrEmpty(request.CustomerEmail) || x.Customer.Email.Contains(request.CustomerEmail)) &&
+                (string.IsNullOrEmpty(request.CustomerPhoneNumber) || x.Customer.PhoneNumber.Contains(request.CustomerPhoneNumber));
+
+            return predicate;
         }
     }
 }

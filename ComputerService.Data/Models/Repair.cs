@@ -17,6 +17,7 @@ namespace ComputerService.Data.Models
         public Customer Customer { get; set; }
         public int? InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
+        public string Description { get; set; }
         public virtual ICollection<RequiredRepairType> RequiredRepairTypes { get; set; }
         public virtual ICollection<UsedPart> UsedParts { get; set; }
     }

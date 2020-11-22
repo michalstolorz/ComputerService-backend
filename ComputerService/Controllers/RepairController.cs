@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,11 +35,19 @@ namespace ComputerService.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("getAllRepairs")]
-        //public async Task<IActionResult> GetAllRepairs()
-        //{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getAllRepairs")]
+        public async Task<IActionResult> GetAllRepairs([FromQuery] GetRepairsRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _repairService.GetRepairsAsync(request, cancellationToken);
 
-        //}
+            return Ok(result);
+        }
 
         /// <summary>
         /// 

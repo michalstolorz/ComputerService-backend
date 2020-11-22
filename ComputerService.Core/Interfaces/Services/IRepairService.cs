@@ -12,7 +12,7 @@ namespace ComputerService.Core.Interfaces.Services
     public interface IRepairService
     {
         Task<int> CreateRepairAsync(CancellationToken cancelationToken);
-
         Task<RepairDetailsResponse> GetRepairAsync(int id, CancellationToken cancellationToken);
+        Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken);
     }
 }

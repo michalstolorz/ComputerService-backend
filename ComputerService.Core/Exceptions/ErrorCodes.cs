@@ -24,33 +24,7 @@
         //Service
         public static string RequestCannotBeNull => "request_cannot_be_null";
         public static string SettingNotFound => "settings_not_found";
-        public static string PositionSkillNotFound => "positionskill_not_found";
-        public static string UserWithGivenIdNotFound => "user_with_given_id_not_found";
-        public static string DepartmentWithGivenIdNotFound => "department_with_given_id_not_found";
-        public static string InterviewWithGivenIdNotFound => "interviewdata_with_given_id_not_found";
-        public static string PositionWithGivenIdNotFound => "position_with_given_id_not_found";
-        public static string ReferrerWithGivenIdNotFound => "referrer_with_given_id_not_found";
-        public static string RecruitmentWithGivenIdNotFound => "recruitment_with_given_id_not_found";
-        public static string RecruitmentCandidatetWithGivenIdNotFound => "recruitment_candidate_with_given_id_not_found";
-        public static string StatusWithGivenIdNotFound => "status_with_given_id_not_found";
-        public static string PositionSkillWithGivenIdNotFound => "positionskill_with_given_id_not_found";
-        public static string DepartmentRecruitmentWithGivenIdNotFound => "department_recruitment_with_given_id_not_found";
-        public static string TypeOfContractWithGivenIdNotFound => "typeofcontract_with_given_id_not_found";
-        public static string DepartmentAlreadyExists => "department_already_exists";
-        public static string PositionAlreadyExists => "position_already_exists";
-        public static string ReferrerAlreadyExists => "referrer_already_exists";
-        public static string SkillAlreadyExists => "skill_already_exists";
-        public static string CandidateAlreadyExists => "candidate_already_exists";
-        public static string TypeOfContractAlreadyExists => "typeofcontract_already_exists";
-        public static string EmailError => "email_error";
-        public static string EmailInvalidType => "invalid_email_type";
-        public static string UserNotAssignedToRecruitment => "user_not_assigned_to_recruitment";
-        public static string PositionSkillAlreadyExists => "position_skill_already_exists";
-        public static string InvalidTemplateName => "invalid_template_name";
-        public static string UserRecruitmentAlreadyExist => "user_recruitment_already_exists";
-        public static string DepartmentRecruitmentAlreadyExist => "department_recruitment_already_exists";
-        public static string CandidateWithGivenIdNotFound => "candidate_with_given_id_not_found";
-        public static string InsufficientPermissions => "insufficient_permissions";
-        public static string RecruitmentCandidateRateWithGivenIdNotFound => "recruitment_candidate_rate_with_given_id_not_found";
+        public static string RepairWithGivenIdNotFound => "repair_with_given_id_not_found";
+        public static string RepairTypeAlreadyAssignToRepair => "repair_type_with_given_id_already_assign_to_given_repair";
     }
 }
