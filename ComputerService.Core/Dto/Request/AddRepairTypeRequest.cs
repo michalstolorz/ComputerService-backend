@@ -6,6 +6,6 @@ namespace ComputerService.Core.Dto.Request
 {
     public class AddRepairTypeRequest
     {
-        public string RepairTypeName { get; set; }
+        public ICollection<string> RepairTypeNames { get; set; }
     }
 }

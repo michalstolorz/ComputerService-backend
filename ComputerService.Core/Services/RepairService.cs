@@ -33,7 +33,7 @@ namespace ComputerService.Core.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<int> CreateRepairAsync(CancellationToken cancelationToken)
+        public async Task<int> AddRepairAsync(CancellationToken cancelationToken)
         {
             var repair = new Repair
             {
@@ -61,31 +61,29 @@ namespace ComputerService.Core.Services
                 .Include(x => x.RequiredRepairTypes)
                     .ThenInclude(x => x.RepairType)
                 .Include(x => x.User)
-                .Include(x => x.Customer)
-                );
+                .Include(x => x.Customer));
 
             if (result == null)
             {
                 throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
 
-            var mapped = _mapper.Map<RepairDetailsResponse>(result);
-
-            return mapped;
+            return _mapper.Map<RepairDetailsResponse>(result);
         }
 
         public async Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken)
         {
-            if(request == null)
-            {
-                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Parameter {request} cannot be null.");
-            }
-
             var predicate = CreatePredicate(request);
 
             var result = await _repairRepository.GetAsync(predicate, cancellationToken,
                 include: x => x
-                .Include(x => x.Customer));
+                .Include(x => x.Customer)
+                .Include(x => x.User));
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
 
             return _mapper.Map<List<GetRepairsResponse>>(result);
         }

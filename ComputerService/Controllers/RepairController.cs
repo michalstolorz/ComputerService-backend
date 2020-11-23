@@ -57,7 +57,7 @@ namespace ComputerService.Controllers
         [HttpPost("addRepair")]
         public async Task<IActionResult> CreateRepair(CancellationToken cancellationToken)
         {
-            var resultId = await _repairService.CreateRepairAsync(cancellationToken);
+            var resultId = await _repairService.AddRepairAsync(cancellationToken);
 
             return Ok(resultId);
         }

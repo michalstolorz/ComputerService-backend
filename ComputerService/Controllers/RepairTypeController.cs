@@ -14,11 +14,11 @@ namespace ComputerService.Controllers
     [ApiController]
     public class RepairTypeController : ControllerBase
     {
-        private readonly IRepairTypeService _repairType;
+        private readonly IRepairTypeService _repairTypeService;
 
-        public RepairTypeController(IRepairTypeService repairType)
+        public RepairTypeController(IRepairTypeService repairTypeService)
         {
-            _repairType = repairType;
+            _repairTypeService = repairTypeService;
         }
 
         /// <summary>
@@ -30,7 +30,35 @@ namespace ComputerService.Controllers
         [HttpPost("addRepairType")]
         public async Task<IActionResult> AddRepairType([FromBody] AddRepairTypeRequest request, CancellationToken cancellationToken)
         {
-            var result = await _repairType.AddRepairTypeAsync(request, cancellationToken);
+            var result = await _repairTypeService.AddRepairTypeAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getRepairType/{id}")]
+        public async Task<IActionResult> GetRepairType(int id, CancellationToken cancellationToken)
+        {
+            var result = await _repairTypeService.GetRepairTypeAsync(id, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repairTypeName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getAllRepairTypes")]
+        public async Task<IActionResult> GetAllRepairs([FromQuery] string repairTypeName, CancellationToken cancellationToken)
+        {
+            var result = await _repairTypeService.GetRepairTypesAsync(repairTypeName, cancellationToken);
 
             return Ok(result);
         }

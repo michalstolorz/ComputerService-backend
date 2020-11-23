@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ComputerService.Core.Dto.Response;
+using ComputerService.Core.Models;
 using ComputerService.Data.Models;
 
 namespace ComputerService.Core.MappingConfiguration
@@ -30,6 +31,10 @@ namespace ComputerService.Core.MappingConfiguration
                 .ForMember(dest => dest.Name,
                     opt => opt.MapFrom(src => src.RepairType.Name));
             CreateMap<Repair, GetRepairsResponse>()
+                .ForMember(dest => dest.UserFirstName,
+                    opt => opt.MapFrom(src => src.User.FirstName))
+                .ForMember(dest => dest.UserLastName,
+                    opt => opt.MapFrom(src => src.User.LastName))
                 .ForMember(dest => dest.CustomerFirstName,
                     opt => opt.MapFrom(src => src.Customer.FirstName))
                 .ForMember(dest => dest.CustomerLastName,
@@ -38,7 +43,14 @@ namespace ComputerService.Core.MappingConfiguration
                     opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhoneNumber,
                     opt => opt.MapFrom(src => src.Customer.PhoneNumber));
-
+            CreateMap<Part, PartModel>().ReverseMap();
+            CreateMap<RepairType, RepairTypeModel>()
+                .ForMember(dest => dest.RequiredRepairTypesModel,
+                    opt => opt.MapFrom(src => src.RequiredRepairTypes));
+            CreateMap<RequiredRepairType, RequiredRepairTypeModel>()
+                .ForPath(dest => dest.RepairTypeModel.Name,
+                    opt => opt.MapFrom(src => src.RepairType.Name))
+                .ReverseMap();
         }
     }
 }
