@@ -15,10 +15,12 @@ namespace ComputerService.Controllers
     public class RepairController : ControllerBase
     {
         private readonly IRepairService _repairService;
+        private readonly IRequiredRepairTypeService _requiredRepairTypeService;
 
-        public RepairController(IRepairService repairService)
+        public RepairController(IRepairService repairService, IRequiredRepairTypeService requiredRepairTypeService)
         {
             _repairService = repairService;
+            _requiredRepairTypeService = requiredRepairTypeService;
         }
 
         /// <summary>
@@ -41,8 +43,8 @@ namespace ComputerService.Controllers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("getAllRepairs")]
-        public async Task<IActionResult> GetAllRepairs([FromQuery] GetRepairsRequest request, CancellationToken cancellationToken)
+        [HttpGet("getRepairs")]
+        public async Task<IActionResult> GetRepairs([FromQuery] GetRepairsRequest request, CancellationToken cancellationToken)
         {
             var result = await _repairService.GetRepairsAsync(request, cancellationToken);
 
@@ -52,14 +54,45 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("addRepair")]
-        public async Task<IActionResult> CreateRepair(CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateRepair(AddRepairRequest request, CancellationToken cancellationToken)
         {
-            var resultId = await _repairService.AddRepairAsync(cancellationToken);
+            var resultId = await _repairService.AddRepairAsync(request, cancellationToken);
+
+            await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(new AssignRepairTypeToRepairRequest { RepairTypeIds = request.RepairTypeIds }, resultId, cancellationToken);
 
             return Ok(resultId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("updateRepairDescription")]
+        public async Task<IActionResult> UpdateRepairDescription([FromBody] UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
+        {
+            await _repairService.UpdateRepairDescriptionAsync(request, cancellationToken);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("evaluateRepairCost")]
+        public async Task<IActionResult> EvaluateRepairCost([FromBody] EvaluateRepairCostRequest request, CancellationToken cancellationToken)
+        {
+            await _repairService.EvaluateRepairCostAsync(request, cancellationToken);
+
+            return Ok();
         }
 
         //[HttpPut("updateRepair")]

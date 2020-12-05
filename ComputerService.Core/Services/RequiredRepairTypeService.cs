@@ -39,11 +39,6 @@ namespace ComputerService.Core.Services
             await validator.ValidateAndThrowAsync(repairId, null, cancellationToken);
             await listValidator.ValidateAndThrowAsync(request.RepairTypeIds, null, cancellationToken);
 
-            if (await _repairRepository.AnyAsync(x => x.Id != repairId, cancellationToken))
-            {
-                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
-            }
-
             foreach (var repairTypeId in request.RepairTypeIds)
             {
                 if (await _requiredRepairTypeRepository.AnyAsync(x => 

@@ -43,6 +43,15 @@ namespace ComputerService.Core.MappingConfiguration
                     opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhoneNumber,
                     opt => opt.MapFrom(src => src.Customer.PhoneNumber));
+            CreateMap<Customer, GetCustomersResponse>()
+                .ForMember(dest => dest.CustomerFirstName,
+                    opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.CustomerLastName,
+                    opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.CustomerEmail,
+                    opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.CustomerPhoneNumber,
+                    opt => opt.MapFrom(src => src.PhoneNumber));
             CreateMap<Part, PartModel>().ReverseMap();
             CreateMap<RepairType, RepairTypeModel>()
                 .ForMember(dest => dest.RequiredRepairTypesModel,

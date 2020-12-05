@@ -12,6 +12,8 @@ namespace ComputerService.Core.Models
         public DateTime FinishDateTime { get; set; }
         public int UserId { get; set; }
         public UserModel UserModel { get; set; }
+        public int CustomerId { get; set; }
+        public CustomerModel Customer { get; set; }
         public int InvoiceId { get; set; }
         public InvoiceModel InvoiceModel { get; set; }
         public EnumStatus Status;

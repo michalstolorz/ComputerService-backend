@@ -17,6 +17,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ComputerService.Core.Exceptions;
 using System.Linq.Expressions;
+using ComputerService.Core.Models;
 
 namespace ComputerService.Core.Services
 {
@@ -26,22 +27,26 @@ namespace ComputerService.Core.Services
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RepairService(IRepairRepository repairRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor) 
+        public RepairService(IRepairRepository repairRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _repairRepository = repairRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<int> AddRepairAsync(CancellationToken cancelationToken)
+        public async Task<int> AddRepairAsync(AddRepairRequest request, CancellationToken cancelationToken)
         {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(request.CustomerId);
+
             var repair = new Repair
             {
                 CreateDateTime = DateTime.Now,
                 Status = EnumStatus.New,
                 //UserId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
                 UserId = 7, //////////////////////////////////////////////////////// DO ZMIANY KIEDY ZROBI SIE AUTORYZACJE
-                CustomerId = 2
+                CustomerId = request.CustomerId,
+                Description = request.Description
             };
 
             var result = await _repairRepository.AddAsync(repair, cancelationToken);
@@ -86,6 +91,38 @@ namespace ComputerService.Core.Services
             }
 
             return _mapper.Map<List<GetRepairsResponse>>(result);
+        }
+
+        public async Task UpdateRepairDescriptionAsync(UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new UpdateRepairDescriptionRequestValidator();
+            await validator.ValidateAndThrowAsync(request, null, cancellationToken);
+
+            var result = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
+            if(result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            result.Description = request.NewDescription;
+
+            await _repairRepository.UpdateAsync(cancellationToken, result);
+        }
+
+        public async Task EvaluateRepairCostAsync(EvaluateRepairCostRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new EvaluateRepairCostRequestValidator();
+            await validator.ValidateAndThrowAsync(request, null, cancellationToken);
+
+            var result = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            result.RepairCost = request.RepairCost;
+
+            await _repairRepository.UpdateAsync(cancellationToken, result);
         }
 
         private Expression<Func<Repair, bool>> CreatePredicate(GetRepairsRequest request)

@@ -55,8 +55,8 @@ namespace ComputerService.Controllers
         /// <param name="repairTypeName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("getAllRepairTypes")]
-        public async Task<IActionResult> GetAllRepairs([FromQuery] string repairTypeName, CancellationToken cancellationToken)
+        [HttpGet("getRepairTypes")]
+        public async Task<IActionResult> GetRepairTypes([FromQuery] string repairTypeName, CancellationToken cancellationToken)
         {
             var result = await _repairTypeService.GetRepairTypesAsync(repairTypeName, cancellationToken);
 

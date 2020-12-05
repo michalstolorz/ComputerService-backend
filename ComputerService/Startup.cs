@@ -59,7 +59,7 @@ namespace ComputerService
             services.AddSingleton(mapper);
             services.AddHttpContextAccessor();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddMvc();
             services.AddSwaggerGen(options =>
@@ -87,7 +87,7 @@ namespace ComputerService
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
             app.UseAuthorization();
