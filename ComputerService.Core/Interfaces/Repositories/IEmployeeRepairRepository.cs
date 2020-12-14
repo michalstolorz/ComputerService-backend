@@ -2,5 +2,5 @@
 
 namespace ComputerService.Core.Interfaces.Repositories
 {
-    public interface ICustomerRepository : IGenericRepository<Customer> { }
+    public interface IEmployeeRepairRepository : IGenericRepository<EmployeeRepair> { }
 }

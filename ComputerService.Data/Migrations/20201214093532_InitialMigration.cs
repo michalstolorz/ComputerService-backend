@@ -128,9 +128,10 @@ namespace ComputerService.Data.Migrations
                     RepairCost = table.Column<decimal>(type: "decimal(8,2)", nullable: true),
                     CreateDateTime = table.Column<DateTime>(type: "datetime2(0)", nullable: false),
                     FinishDateTime = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,8 +143,8 @@ namespace ComputerService.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Repair_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Repair_User_CustomerId",
+                        column: x => x.CustomerId,
                         principalSchema: "dbo",
                         principalTable: "User",
                         principalColumn: "Id",
@@ -245,6 +246,33 @@ namespace ComputerService.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeeRepairs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RepairId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeRepairs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeRepairs_Repair_RepairId",
+                        column: x => x.RepairId,
+                        principalTable: "Repair",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EmployeeRepairs_User_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "dbo",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RequiredRepairType",
                 columns: table => new
                 {
@@ -276,6 +304,7 @@ namespace ComputerService.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<decimal>(type: "decimal(3,0)", nullable: false),
                     RepairId = table.Column<int>(type: "int", nullable: false),
                     PartId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -297,14 +326,24 @@ namespace ComputerService.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeeRepairs_RepairId",
+                table: "EmployeeRepairs",
+                column: "RepairId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeRepairs_UserId",
+                table: "EmployeeRepairs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Repair_CustomerId",
+                table: "Repair",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Repair_InvoiceId",
                 table: "Repair",
                 column: "InvoiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Repair_UserId",
-                table: "Repair",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequiredRepairType_RepairId",
@@ -375,6 +414,9 @@ namespace ComputerService.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmployeeRepairs");
+
             migrationBuilder.DropTable(
                 name: "RequiredRepairType");
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerService.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201121133005_AddingCustomerTable")]
-    partial class AddingCustomerTable
+    [Migration("20201214093532_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,68 +21,26 @@ namespace ComputerService.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("ComputerService.Data.Models.Customer", b =>
+            modelBuilder.Entity("ComputerService.Data.Models.EmployeeRepair", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AccessFailedCount")
+                    b.Property<int>("RepairId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", "dbo");
+                    b.HasIndex("RepairId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmployeeRepairs");
                 });
 
             modelBuilder.Entity("ComputerService.Data.Models.Invoice", b =>
@@ -138,6 +96,10 @@ namespace ComputerService.Data.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<DateTime?>("FinishDateTime")
                         .HasColumnType("datetime2(0)");
 
@@ -150,16 +112,11 @@ namespace ComputerService.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Repair");
                 });
@@ -242,6 +199,9 @@ namespace ComputerService.Data.Migrations
 
                     b.Property<int>("PartId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(3,0)");
 
                     b.Property<int>("RepairId")
                         .HasColumnType("int");
@@ -340,12 +300,7 @@ namespace ComputerService.Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
                     b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("RoleId");
 
@@ -441,9 +396,28 @@ namespace ComputerService.Data.Migrations
                     b.ToTable("UserToken", "dbo");
                 });
 
+            modelBuilder.Entity("ComputerService.Data.Models.EmployeeRepair", b =>
+                {
+                    b.HasOne("ComputerService.Data.Models.Repair", "Repair")
+                        .WithMany("EmployeeRepairs")
+                        .HasForeignKey("RepairId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ComputerService.Data.Models.User", "User")
+                        .WithMany("EmployeeRepairs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Repair");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ComputerService.Data.Models.Repair", b =>
                 {
-                    b.HasOne("ComputerService.Data.Models.Customer", "Customer")
+                    b.HasOne("ComputerService.Data.Models.User", "Customer")
                         .WithMany("Repairs")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -453,17 +427,9 @@ namespace ComputerService.Data.Migrations
                         .WithMany()
                         .HasForeignKey("InvoiceId");
 
-                    b.HasOne("ComputerService.Data.Models.User", "User")
-                        .WithMany("Repairs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Invoice");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ComputerService.Data.Models.RequiredRepairType", b =>
@@ -506,10 +472,6 @@ namespace ComputerService.Data.Migrations
 
             modelBuilder.Entity("ComputerService.Data.Models.UserRole", b =>
                 {
-                    b.HasOne("ComputerService.Data.Models.Customer", null)
-                        .WithMany("UserRoles")
-                        .HasForeignKey("CustomerId");
-
                     b.HasOne("ComputerService.Data.Models.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
@@ -563,13 +525,6 @@ namespace ComputerService.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ComputerService.Data.Models.Customer", b =>
-                {
-                    b.Navigation("Repairs");
-
-                    b.Navigation("UserRoles");
-                });
-
             modelBuilder.Entity("ComputerService.Data.Models.Part", b =>
                 {
                     b.Navigation("UsedParts");
@@ -577,6 +532,8 @@ namespace ComputerService.Data.Migrations
 
             modelBuilder.Entity("ComputerService.Data.Models.Repair", b =>
                 {
+                    b.Navigation("EmployeeRepairs");
+
                     b.Navigation("RequiredRepairTypes");
 
                     b.Navigation("UsedParts");
@@ -594,6 +551,8 @@ namespace ComputerService.Data.Migrations
 
             modelBuilder.Entity("ComputerService.Data.Models.User", b =>
                 {
+                    b.Navigation("EmployeeRepairs");
+
                     b.Navigation("Repairs");
 
                     b.Navigation("UserRoles");

@@ -10,5 +10,6 @@ namespace ComputerService.Data.Models
         public string LastName { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Repair> Repairs { get; set; }
+        public ICollection<EmployeeRepair> EmployeeRepairs { get; set; }
     }
 }

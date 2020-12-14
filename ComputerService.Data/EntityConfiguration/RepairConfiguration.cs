@@ -20,9 +20,6 @@ namespace ComputerService.Data.EntityConfiguration
             builder.Property(x => x.FinishDateTime)
                 .HasColumnType("datetime2(0)");
 
-            builder.Property(x => x.UserId)
-                .IsRequired();
-
             builder.Property(x => x.CustomerId)
                 .IsRequired();
 
@@ -30,6 +27,7 @@ namespace ComputerService.Data.EntityConfiguration
 
             builder.Property(x => x.Description)
                 .HasMaxLength(500);
+
         }
     }
 }

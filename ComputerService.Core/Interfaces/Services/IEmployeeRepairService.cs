@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ComputerService.Core.Interfaces.Services
 {
-    public interface ICustomerService
+    public interface IEmployeeRepairService
     {
-        Task<List<GetCustomersResponse>> GetCustomersAsync(GetCustomersRequest request, CancellationToken cancellationToken);
+        Task AddEmployeeRepair(int repairId, CancellationToken cancellationToken);
     }
 }

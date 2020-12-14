@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +13,18 @@ namespace ComputerService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class RepairController : ControllerBase
     {
         private readonly IRepairService _repairService;
         private readonly IRequiredRepairTypeService _requiredRepairTypeService;
+        private readonly IEmployeeRepairService _employeeRepairService;
 
-        public RepairController(IRepairService repairService, IRequiredRepairTypeService requiredRepairTypeService)
+        public RepairController(IRepairService repairService, IRequiredRepairTypeService requiredRepairTypeService, IEmployeeRepairService employeeRepairService)
         {
             _repairService = repairService;
             _requiredRepairTypeService = requiredRepairTypeService;
+            _employeeRepairService = employeeRepairService;
         }
 
         /// <summary>
@@ -63,6 +67,8 @@ namespace ComputerService.Controllers
             var resultId = await _repairService.AddRepairAsync(request, cancellationToken);
 
             await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(new AssignRepairTypeToRepairRequest { RepairTypeIds = request.RepairTypeIds }, resultId, cancellationToken);
+
+            await _employeeRepairService.AddEmployeeRepair(resultId, cancellationToken);
 
             return Ok(resultId);
         }

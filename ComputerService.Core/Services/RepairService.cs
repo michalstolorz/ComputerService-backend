@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using ComputerService.Core.Exceptions;
 using System.Linq.Expressions;
 using ComputerService.Core.Models;
+using ComputerService.Core.Helpers;
 
 namespace ComputerService.Core.Services
 {
@@ -25,16 +26,18 @@ namespace ComputerService.Core.Services
     {
         private readonly IRepairRepository _repairRepository;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserContextProvider _userContextProvider;
+        private readonly IEmployeeRepairRepository _employeeRepairRepository;
 
-        public RepairService(IRepairRepository repairRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public RepairService(IRepairRepository repairRepository, IMapper mapper, IUserContextProvider userContextProvider, IEmployeeRepairRepository employeeRepairRepository)
         {
             _repairRepository = repairRepository;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
+            _userContextProvider = userContextProvider;
+            _employeeRepairRepository = employeeRepairRepository;
         }
 
-        public async Task<int> AddRepairAsync(AddRepairRequest request, CancellationToken cancelationToken)
+        public async Task<int> AddRepairAsync(AddRepairRequest request, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
             await validator.ValidateAndThrowAsync(request.CustomerId);
@@ -43,13 +46,11 @@ namespace ComputerService.Core.Services
             {
                 CreateDateTime = DateTime.Now,
                 Status = EnumStatus.New,
-                //UserId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                UserId = 7, //////////////////////////////////////////////////////// DO ZMIANY KIEDY ZROBI SIE AUTORYZACJE
                 CustomerId = request.CustomerId,
                 Description = request.Description
             };
 
-            var result = await _repairRepository.AddAsync(repair, cancelationToken);
+            var result = await _repairRepository.AddAsync(repair, cancellationToken);
 
             return result.Id;
         }
@@ -65,8 +66,9 @@ namespace ComputerService.Core.Services
                     .ThenInclude(x => x.Part)
                 .Include(x => x.RequiredRepairTypes)
                     .ThenInclude(x => x.RepairType)
-                .Include(x => x.User)
-                .Include(x => x.Customer));
+                .Include(x => x.Customer)
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User));
 
             if (result == null)
             {
@@ -83,7 +85,8 @@ namespace ComputerService.Core.Services
             var result = await _repairRepository.GetAsync(predicate, cancellationToken,
                 include: x => x
                 .Include(x => x.Customer)
-                .Include(x => x.User));
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User));
 
             if (result == null)
             {
@@ -99,7 +102,7 @@ namespace ComputerService.Core.Services
             await validator.ValidateAndThrowAsync(request, null, cancellationToken);
 
             var result = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
-            if(result == null)
+            if (result == null)
             {
                 throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
