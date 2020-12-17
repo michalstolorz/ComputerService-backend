@@ -11,7 +11,7 @@ namespace ComputerService.Core.MappingConfiguration
     {
         public Configuration()
         {
-            CreateMap<Repair, RepairDetailsResponse>()
+            CreateMap<Repair, GetRepairDetailsResponse>()
                 .ForMember(dest => dest.CustomerFirstName,
                     opt => opt.MapFrom(src => src.Customer.FirstName))
                 .ForMember(dest => dest.CustomerLastName,
@@ -26,7 +26,6 @@ namespace ComputerService.Core.MappingConfiguration
                     opt => opt.MapFrom(src => src.RequiredRepairTypes))
                 .ForMember(dest => dest.RepairUsers,
                     opt => opt.MapFrom(src => src.EmployeeRepairs));
-
             CreateMap<EmployeeRepair, RepairUsers>()
                 .ForMember(dest => dest.UserId,
                     opt => opt.MapFrom(src => src.User.Id))
@@ -67,7 +66,21 @@ namespace ComputerService.Core.MappingConfiguration
             CreateMap<RegisterRequest, User>()
                .ForMember(dest => dest.UserName,
                     opt => opt.MapFrom(src => src.Email));
-            CreateMap<Role, RoleResponse>();
+            CreateMap<Role, RoleResponse>(); 
+            CreateMap<User, GetCustomersResponse>()
+                 .ForMember(dest => dest.CustomerFirstName,
+                     opt => opt.MapFrom(src => src.FirstName))
+                 .ForMember(dest => dest.CustomerLastName,
+                     opt => opt.MapFrom(src => src.LastName))
+                 .ForMember(dest => dest.CustomerEmail,
+                     opt => opt.MapFrom(src => src.Email))
+                 .ForMember(dest => dest.CustomerPhoneNumber,
+                     opt => opt.MapFrom(src => src.PhoneNumber));
+            CreateMap<Repair, RepairModel>()
+                 .ForMember(dest => dest.CustomerModel,
+                     opt => opt.MapFrom(src => src.Customer))
+                 .ForMember(dest => dest.InvoiceModel,
+                     opt => opt.MapFrom(src => src.Invoice));
         }
     }
 }

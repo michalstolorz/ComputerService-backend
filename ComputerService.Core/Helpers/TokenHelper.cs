@@ -30,17 +30,17 @@ namespace ComputerService.Core.Helpers
             return key;
         }
 
-        public static string GenerateToken(int userId, /*IList<string> userRoles, IEnumerable<Claim> permissions,*/ RsaSecurityKey key, IDateTimeProvider dateTimeProvider)
+        public static string GenerateToken(int userId, IList<string> userRoles, /*IEnumerable<Claim> permissions,*/ RsaSecurityKey key, IDateTimeProvider dateTimeProvider)
         {
             var claims = new List<Claim>(){
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             };
             /*claims.AddRange(permissions);*/
 
-            /*foreach (var role in userRoles)
+            foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            }*/
+            }
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature, SecurityAlgorithms.Sha256Digest);
 
             var tokenDescriptor = new SecurityTokenDescriptor

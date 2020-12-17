@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ComputerService.Core.Dto.Response
 {
-    public class RepairDetailsResponse
+    public class GetRepairDetailsResponse
     {
         public int Id { get; set; }
         public decimal RepairCost { get; set; }

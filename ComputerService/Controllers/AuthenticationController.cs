@@ -66,8 +66,8 @@ namespace ComputerService.Controllers
                 if (result.Succeeded)
                 {
                     var key = TokenHelper.BuildRsaSigningKey(_privateKey);
-
-                    var token = TokenHelper.GenerateToken(user.Id, key, _dateTimeProvider);
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var token = TokenHelper.GenerateToken(user.Id, userRoles, key, _dateTimeProvider);
                     var loggedUser = _mapper.Map<LoginResponse>(user);
                     loggedUser.Token = token;
 
@@ -76,6 +76,18 @@ namespace ComputerService.Controllers
             }
 
             return Unauthorized();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return Ok();
         }
 
     }

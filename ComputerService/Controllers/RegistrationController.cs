@@ -47,7 +47,7 @@ namespace ComputerService.Controllers
                 return BadRequest(creatingUserResult.Errors);
             }
 
-            return NoContent();
+            return Ok(userToCreate.Id);
         }
     }
 }

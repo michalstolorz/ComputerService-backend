@@ -92,7 +92,17 @@ namespace ComputerService
                     var publicAuthorizationKey = Configuration.GetSection("AppSettings:PublicKey").Value;
                     var key = TokenHelper.BuildRsaSigningKey(publicAuthorizationKey);
                     options.TokenValidationParameters = TokenHelper.GetTokenValidationParameters(key);
-                });
+                })
+                .AddCookie(IdentityConstants.ApplicationScheme, options =>
+                {
+                    options.SlidingExpiration = true;
+                })
+                .AddCookie(IdentityConstants.TwoFactorUserIdScheme, o =>
+                {
+                    o.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
+                    o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                })
+                .AddExternalCookie();
 
             services.AddAuthorization(options =>
             {

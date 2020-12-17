@@ -55,7 +55,7 @@ namespace ComputerService.Core.Services
             return result.Id;
         }
 
-        public async Task<RepairDetailsResponse> GetRepairAsync(int id, CancellationToken cancellationToken)
+        public async Task<GetRepairDetailsResponse> GetRepairAsync(int id, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
             await validator.ValidateAndThrowAsync(id, null, cancellationToken);
@@ -75,7 +75,26 @@ namespace ComputerService.Core.Services
                 throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
 
-            return _mapper.Map<RepairDetailsResponse>(result);
+            return _mapper.Map<GetRepairDetailsResponse>(result);
+        }
+
+        public async Task<List<GetRepairsResponse>> GetRepairsByStatusAsync(int repairStatusId, CancellationToken cancellationToken)
+        {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(repairStatusId, null, cancellationToken);
+
+            var result = await _repairRepository.GetAsync(predicate: x => x.Status == (EnumStatus)repairStatusId, cancellationToken,
+                include: x => x
+                .Include(x => x.Customer)
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User));
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            return _mapper.Map<List<GetRepairsResponse>>(result);
         }
 
         public async Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken)
@@ -95,6 +114,25 @@ namespace ComputerService.Core.Services
 
             return _mapper.Map<List<GetRepairsResponse>>(result);
         }
+
+        //public async Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(int customerId, CancellationToken cancellationToken)
+        //{
+        //    var validator = new IdValidator();
+        //    await validator.ValidateAndThrowAsync(customerId, null, cancellationToken);
+
+        //    var result = await _repairRepository.GetAsync(predicate: x => x.CustomerId == customerId, cancellationToken,
+        //        include: x => x
+        //        .Include(x => x.Customer)
+        //        .Include(x => x.EmployeeRepairs)
+        //            .ThenInclude(x => x.User));
+
+        //    if (result == null)
+        //    {
+        //        throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+        //    }
+
+        //    return _mapper.Map<List<GetRepairsResponse>>(result);
+        //}
 
         public async Task UpdateRepairDescriptionAsync(UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
         {
@@ -128,10 +166,30 @@ namespace ComputerService.Core.Services
             await _repairRepository.UpdateAsync(cancellationToken, result);
         }
 
+        public async Task<RepairModel> UpdateRepairStatusAsync(UpdateRepairStatusRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(request.RepairId, null, cancellationToken);
+            await validator.ValidateAndThrowAsync(request.StatusId, null, cancellationToken);
+
+            var repairToUpdate = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
+            if (repairToUpdate == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            repairToUpdate.Status = (EnumStatus)request.RepairId;
+
+            var result = await _repairRepository.UpdateAsync(cancellationToken, repairToUpdate);
+
+            return _mapper.Map<RepairModel>(result);
+        }
+
         private Expression<Func<Repair, bool>> CreatePredicate(GetRepairsRequest request)
         {
             Expression<Func<Repair, bool>> predicate = x =>
                 (!request.Id.HasValue || x.Id.Equals(request.Id)) &&
+                (!request.CustomerId.HasValue || x.CustomerId.Equals(request.CustomerId)) &&
                 (string.IsNullOrEmpty(request.CustomerFirstName) || x.Customer.FirstName.Contains(request.CustomerFirstName)) &&
                 (string.IsNullOrEmpty(request.CustomerLastName) || x.Customer.LastName.Contains(request.CustomerLastName)) &&
                 (string.IsNullOrEmpty(request.CustomerEmail) || x.Customer.Email.Contains(request.CustomerEmail)) &&

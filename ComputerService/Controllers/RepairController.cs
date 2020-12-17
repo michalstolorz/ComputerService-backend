@@ -5,15 +5,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
+using ComputerService.Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ComputerService.Core.Dto.Response;
 
 namespace ComputerService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class RepairController : ControllerBase
     {
         private readonly IRepairService _repairService;
@@ -34,6 +35,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepair/{id}")]
+        [Authorize(Roles = "Admin, Employee, Customer")]
         public async Task<IActionResult> GetRepair(int id, CancellationToken cancellationToken)
         {
             var result = await _repairService.GetRepairAsync(id, cancellationToken);
@@ -48,6 +50,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepairs")]
+        [Authorize(Roles = "Admin, Employee, Customer, Boss")]
         public async Task<IActionResult> GetRepairs([FromQuery] GetRepairsRequest request, CancellationToken cancellationToken)
         {
             var result = await _repairService.GetRepairsAsync(request, cancellationToken);
@@ -58,10 +61,45 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getRepairsForAssign")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> GetRepairsForAssign(CancellationToken cancellationToken)
+        {
+            List<List<GetRepairsResponse>> list = new List<List<GetRepairsResponse>>
+            {
+                await _repairService.GetRepairsByStatusAsync((int)EnumStatus.New, cancellationToken),
+                await _repairService.GetRepairsByStatusAsync((int)EnumStatus.InProgress, cancellationToken),
+                await _repairService.GetRepairsByStatusAsync((int)EnumStatus.ForCustomerApproval, cancellationToken)
+            };
+
+            return Ok(list);
+        }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="customerId"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //[HttpGet("getCustomerRepairs/{customerId}")]
+        //[Authorize(Roles = "Admin, Customer, Employee, Boss")]
+        //public async Task<IActionResult> GetCustomerRepairs(int customerId, CancellationToken cancellationToken)
+        //{
+        //    var result = await _repairService.GetCustomerRepairsAsync(customerId, cancellationToken);
+
+        //    return Ok(result);
+        //}
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("addRepair")]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> CreateRepair(AddRepairRequest request, CancellationToken cancellationToken)
         {
             var resultId = await _repairService.AddRepairAsync(request, cancellationToken);
@@ -80,6 +118,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("updateRepairDescription")]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> UpdateRepairDescription([FromBody] UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
         {
             await _repairService.UpdateRepairDescriptionAsync(request, cancellationToken);
@@ -94,6 +133,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("evaluateRepairCost")]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> EvaluateRepairCost([FromBody] EvaluateRepairCostRequest request, CancellationToken cancellationToken)
         {
             await _repairService.EvaluateRepairCostAsync(request, cancellationToken);
@@ -101,10 +141,20 @@ namespace ComputerService.Controllers
             return Ok();
         }
 
-        //[HttpPut("updateRepair")]
-        //public async Task<IActionResult> UpdateRepair()
-        //{
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("updateRepairStatus")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UpdateRepairStatus([FromBody] UpdateRepairStatusRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _repairService.UpdateRepairStatusAsync(request, cancellationToken);
 
-        //}
+            return Ok(result);
+        }
+
     }
 }
