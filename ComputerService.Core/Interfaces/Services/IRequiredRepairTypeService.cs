@@ -10,6 +10,6 @@ namespace ComputerService.Core.Interfaces.Services
 {
     public interface IRequiredRepairTypeService
     {
-        Task AssignRepairTypeToRepairAsync(AssignRepairTypeToRepairRequest request, int repairId, CancellationToken cancellationToken);
+        Task AssignRepairTypeToRepairAsync(AssignRepairTypeToRepairRequest request, CancellationToken cancellationToken);
     }
 }

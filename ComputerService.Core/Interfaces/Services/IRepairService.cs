@@ -19,5 +19,6 @@ namespace ComputerService.Core.Interfaces.Services
         Task UpdateRepairDescriptionAsync(UpdateRepairDescriptionRequest request, CancellationToken cancellationToken);
         Task EvaluateRepairCostAsync(EvaluateRepairCostRequest request, CancellationToken cancellationToken);
         Task<RepairModel> UpdateRepairStatusAsync(UpdateRepairStatusRequest request, CancellationToken cancellationToken);
+
     }
 }

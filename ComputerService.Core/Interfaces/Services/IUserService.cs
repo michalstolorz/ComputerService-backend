@@ -1,4 +1,5 @@
-﻿using ComputerService.Core.Dto.Response;
+﻿using ComputerService.Core.Dto.Request;
+using ComputerService.Core.Dto.Response;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,6 @@ namespace ComputerService.Core.Interfaces.Services
     public interface IUserService
     {
         Task<List<GetCustomersResponse>> GetUsersFromRoleAsync(string role, CancellationToken cancellationToken);
+        Task<bool> CheckUserInRole(string role, CancellationToken cancellationToken);
     }
 }

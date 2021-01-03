@@ -42,9 +42,23 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getPart/{id}")]
-        public async Task<IActionResult> GetRepair(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPart(int id, CancellationToken cancellationToken)
         {
             var result = await _partService.GetPartAsync(id, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="partName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getParts")]
+        public async Task<IActionResult> GetParts(string partName, CancellationToken cancellationToken)
+        {
+            var result = await _partService.GetPartsAsync(partName, cancellationToken);
 
             return Ok(result);
         }

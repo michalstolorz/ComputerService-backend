@@ -70,5 +70,18 @@ namespace ComputerService.Core.Services
 
             return _mapper.Map<PartModel>(result);
         }
+
+        public async Task<List<PartModel>> GetPartsAsync(string partName, CancellationToken cancellationToken)
+        {
+            var result = await _partRepository.GetAsync(predicate: x =>
+                (string.IsNullOrEmpty(partName) || x.Name.Contains(partName)), cancellationToken);
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.PartWithGivenIdNotFound, $"Part with provided id doesn't exist");
+            }
+
+            return _mapper.Map<List<PartModel>>(result);
+        }
     }
 }

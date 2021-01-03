@@ -5,8 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
+using ComputerService.Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ComputerService.Core.Dto.Response;
 
 namespace ComputerService.Controllers
 {
@@ -25,13 +28,12 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="repairId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPost("assignRepairTypeToRepair/{repairId}")]
-        public async Task<IActionResult> AssignRepairTypeToRepair([FromBody] AssignRepairTypeToRepairRequest request, int repairId, CancellationToken cancellationToken)
+        [HttpPost("assignRepairTypeToRepair")]
+        public async Task<IActionResult> AssignRepairTypeToRepair([FromBody] AssignRepairTypeToRepairRequest request, CancellationToken cancellationToken)
         {
-            await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(request, repairId, cancellationToken);
+            await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(request, cancellationToken);
 
             return Ok();
         }

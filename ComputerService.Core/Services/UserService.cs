@@ -28,12 +28,14 @@ namespace ComputerService.Core.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
+        private readonly IUserContextProvider _userContextProvider;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapper)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapper, IUserContextProvider userContextProvider)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
+            _userContextProvider = userContextProvider;
         }
 
         public async Task<List<GetCustomersResponse>> GetUsersFromRoleAsync(string role, CancellationToken cancellationToken)
@@ -46,6 +48,13 @@ namespace ComputerService.Core.Services
             }
 
             return _mapper.Map<List<GetCustomersResponse>>(result);
+        }
+
+        public async Task<bool> CheckUserInRole(string role, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.GetUserAsync(_userContextProvider.User);
+
+            return await _userManager.IsInRoleAsync(user, role);
         }
     }
 }

@@ -59,6 +59,9 @@ namespace ComputerService.Core.MappingConfiguration
             CreateMap<RepairType, RepairTypeModel>()
                 .ForMember(dest => dest.RequiredRepairTypesModel,
                     opt => opt.MapFrom(src => src.RequiredRepairTypes));
+            CreateMap<Part, PartModel>()
+                .ForMember(dest => dest.UsedPartsModel,
+                    opt => opt.MapFrom(src => src.UsedParts));
             CreateMap<RequiredRepairType, RequiredRepairTypeModel>()
                 .ForPath(dest => dest.RepairTypeModel.Name,
                     opt => opt.MapFrom(src => src.RepairType.Name))

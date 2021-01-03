@@ -32,20 +32,32 @@ namespace ComputerService.Core.Services
             _repairRepository = repairRepository;
         }
 
-        public async Task AssignRepairTypeToRepairAsync(AssignRepairTypeToRepairRequest request, int repairId, CancellationToken cancellationToken)
+        public async Task AssignRepairTypeToRepairAsync(AssignRepairTypeToRepairRequest request, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
             var listValidator = new ListIdsValidator();
-            await validator.ValidateAndThrowAsync(repairId, null, cancellationToken);
+            await validator.ValidateAndThrowAsync(request.RepairId, null, cancellationToken);
             await listValidator.ValidateAndThrowAsync(request.RepairTypeIds, null, cancellationToken);
+
+            var repairResult = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
+            if (repairResult == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
 
             foreach (var repairTypeId in request.RepairTypeIds)
             {
-                if (await _requiredRepairTypeRepository.AnyAsync(x => 
-                 x.RepairId == repairId &&
+                var repairTypeResult = await _requiredRepairTypeRepository.GetByIdAsync(repairTypeId, cancellationToken);
+                if (repairTypeResult == null)
+                {
+                    throw new ServiceException(ErrorCodes.RepairTypeAlreadyAssignToRepair, $"Repair type with provided id {repairTypeId} doesn't exist");
+                }
+
+                if (await _requiredRepairTypeRepository.AnyAsync(x =>
+                 x.RepairId == request.RepairId &&
                  x.RepairTypeId == repairTypeId, cancellationToken))
                 {
-                    throw new ServiceException(ErrorCodes.RepairTypeAlreadyAssignToRepair, $"Repair type with provided id {repairTypeId} already assign to given repair with id {repairId}");
+                    throw new ServiceException(ErrorCodes.RepairTypeAlreadyAssignToRepair, $"Repair type with provided id {repairTypeId} already assign to given repair with id {request.RepairId}");
                 }
             }
 
@@ -54,7 +66,7 @@ namespace ComputerService.Core.Services
             {
                 RequiredRepairType repairType = new RequiredRepairType()
                 {
-                    RepairId = repairId,
+                    RepairId = request.RepairId,
                     RepairTypeId = repairTypeId
                 };
                 repairTypesToAssign.Add(repairType);

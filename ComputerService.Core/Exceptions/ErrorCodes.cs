@@ -28,8 +28,11 @@
         public static string CustomerWithGivenIdNotFound => "customer_with_given_id_not_found";
         public static string RepairTypeWithGivenIdNotFound => "repair_type_with_given_id_not_found";
         public static string RepairTypeAlreadyAssignToRepair => "repair_type_with_given_id_already_assign_to_given_repair";
+        public static string UsedPartAlreadyAssignToRepair => "part_with_given_id_already_assign_to_given_repair";
         public static string RepairTypeAlreadyExists => "repair_type_already_exists";
         public static string PartAlreadyExists => "part_already_exists";
         public static string PartWithGivenIdNotFound => "part_with_given_id_not_found";
+        public static string NotEnoughtPartsInWarehouse => "not_enought_parts_in_warehouse";
+        public static string EmployeeAlreadyAssignToRepair => "employee_with_given_id_already_assign_to_given_repair";
     }
 }

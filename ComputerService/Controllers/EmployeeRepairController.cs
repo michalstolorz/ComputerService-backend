@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ComputerService.Common.Enums;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Dto.Response;
 using ComputerService.Core.Interfaces.Services;
@@ -34,10 +35,15 @@ namespace ComputerService.Controllers
         /// <param name="repairId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPost("assignEmployeeToRepair")]
+        [HttpPost("assignEmployeeToRepair/{repairId}")]
         public async Task<IActionResult> AssignEmployeeToRepair(int repairId, CancellationToken cancellationToken)
         {
             await _employeeRepairService.AddEmployeeRepair(repairId, cancellationToken);
+
+            var repair = await _repairService.GetRepairAsync(repairId, cancellationToken);
+
+            if (repair.Status == EnumStatus.New)
+                await _repairService.UpdateRepairStatusAsync(new UpdateRepairStatusRequest { StatusId = (int)EnumStatus.InProgress, RepairId = repairId }, cancellationToken);
 
             return Ok();
         }

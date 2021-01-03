@@ -104,7 +104,7 @@ namespace ComputerService.Controllers
         {
             var resultId = await _repairService.AddRepairAsync(request, cancellationToken);
 
-            await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(new AssignRepairTypeToRepairRequest { RepairTypeIds = request.RepairTypeIds }, resultId, cancellationToken);
+            await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(new AssignRepairTypeToRepairRequest { RepairTypeIds = request.RepairTypeIds, RepairId = resultId}, cancellationToken);
 
             await _employeeRepairService.AddEmployeeRepair(resultId, cancellationToken);
 
@@ -155,6 +155,5 @@ namespace ComputerService.Controllers
 
             return Ok(result);
         }
-
     }
 }

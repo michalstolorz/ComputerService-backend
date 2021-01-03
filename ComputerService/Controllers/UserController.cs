@@ -36,6 +36,18 @@ namespace ComputerService.Controllers
             return Ok(result);
         }
 
-        //public async Task<IActionResult> CheckUserIsInRole()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="role"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("checkUserInRole")]
+        public async Task<IActionResult> CheckUserInRole([FromQuery] string role, CancellationToken cancellationToken)
+        {
+            var result = await _userService.CheckUserInRole(role, cancellationToken);
+
+            return Ok(result);
+        }
     }
 }
