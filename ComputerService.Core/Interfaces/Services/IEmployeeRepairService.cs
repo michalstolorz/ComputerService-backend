@@ -10,6 +10,6 @@ namespace ComputerService.Core.Interfaces.Services
 {
     public interface IEmployeeRepairService
     {
-        Task AddEmployeeRepair(int repairId, CancellationToken cancellationToken);
+        Task<int> AddEmployeeRepair(int repairId, CancellationToken cancellationToken);
     }
 }

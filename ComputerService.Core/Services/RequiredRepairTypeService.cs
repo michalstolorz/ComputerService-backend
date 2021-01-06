@@ -25,11 +25,13 @@ namespace ComputerService.Core.Services
     {
         private readonly IRequiredRepairTypeRepository _requiredRepairTypeRepository;
         private readonly IRepairRepository _repairRepository;
+        private readonly IRepairTypeRepository _repairTypeRepository;
 
-        public RequiredRepairTypeService(IRequiredRepairTypeRepository requiredRepairTypeRepository, IRepairRepository repairRepository)
+        public RequiredRepairTypeService(IRequiredRepairTypeRepository requiredRepairTypeRepository, IRepairRepository repairRepository, IRepairTypeRepository repairTypeRepository)
         {
             _requiredRepairTypeRepository = requiredRepairTypeRepository;
             _repairRepository = repairRepository;
+            _repairTypeRepository = repairTypeRepository;
         }
 
         public async Task AssignRepairTypeToRepairAsync(AssignRepairTypeToRepairRequest request, CancellationToken cancellationToken)
@@ -42,12 +44,12 @@ namespace ComputerService.Core.Services
             var repairResult = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
             if (repairResult == null)
             {
-                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+                throw new ServiceException(ErrorCodes.RepairTypeWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
 
             foreach (var repairTypeId in request.RepairTypeIds)
             {
-                var repairTypeResult = await _requiredRepairTypeRepository.GetByIdAsync(repairTypeId, cancellationToken);
+                var repairTypeResult = await _repairTypeRepository.GetByIdAsync(repairTypeId, cancellationToken);
                 if (repairTypeResult == null)
                 {
                     throw new ServiceException(ErrorCodes.RepairTypeAlreadyAssignToRepair, $"Repair type with provided id {repairTypeId} doesn't exist");

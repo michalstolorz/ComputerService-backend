@@ -5,6 +5,7 @@ using ComputerService.Data.Models;
 using Microsoft.AspNetCore.Http;
 using ComputerService.Common.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -68,7 +69,8 @@ namespace ComputerService.Core.Services
                     .ThenInclude(x => x.RepairType)
                 .Include(x => x.Customer)
                 .Include(x => x.EmployeeRepairs)
-                    .ThenInclude(x => x.User));
+                    .ThenInclude(x => x.User)
+                 .Include(x => x.Invoice));
 
             if (result == null)
             {
@@ -105,7 +107,8 @@ namespace ComputerService.Core.Services
                 include: x => x
                 .Include(x => x.Customer)
                 .Include(x => x.EmployeeRepairs)
-                    .ThenInclude(x => x.User));
+                    .ThenInclude(x => x.User),
+                orderBy: x => x.OrderBy(x => x.Status));
 
             if (result == null)
             {
@@ -178,7 +181,7 @@ namespace ComputerService.Core.Services
                 throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
             }
 
-            repairToUpdate.Status = (EnumStatus)request.RepairId;
+            repairToUpdate.Status = (EnumStatus)request.StatusId;
 
             var result = await _repairRepository.UpdateAsync(cancellationToken, repairToUpdate);
 

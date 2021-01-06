@@ -20,7 +20,7 @@ namespace ComputerService.Core.Dto.Response
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
         public string Description { get; set; }
-        public ICollection<Part> PartsUsedInRepair { get; set; }
+        public ICollection<PartsUsedInRepair> UsedParts { get; set; }
         public ICollection<RepairType> RepairTypes { get; set; }
         public ICollection<RepairUsers> RepairUsers { get; set; }
     }
@@ -30,5 +30,13 @@ namespace ComputerService.Core.Dto.Response
         public int UserId { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
+    }
+
+    public class PartsUsedInRepair
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+        public decimal PartBoughtPrice { get; set; }
     }
 }

@@ -45,7 +45,46 @@ namespace ComputerService.Controllers
         [HttpGet("checkUserInRole")]
         public async Task<IActionResult> CheckUserInRole([FromQuery] string role, CancellationToken cancellationToken)
         {
-            var result = await _userService.CheckUserInRole(role, cancellationToken);
+            var result = await _userService.CheckUserInRoleAsync(role, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("checkUserRole")]
+        public async Task<IActionResult> CheckUserRole(CancellationToken cancellationToken)
+        {
+            var result = await _userService.CheckUserRoleAsync(cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getUsersWithRoles")]
+        public async Task<IActionResult> GetUsersWithRoles(CancellationToken cancellationToken)
+        {
+            var result = await _userService.GetUsersWithRolesAsync(cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getCurrentLoggedUser")]
+        public async Task<IActionResult> GetCurrentLoggedUser(CancellationToken cancellationToken)
+        {
+            var result = await _userService.GetCurrentLoggedUserAsync(cancellationToken);
 
             return Ok(result);
         }

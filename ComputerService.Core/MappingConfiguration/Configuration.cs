@@ -20,12 +20,21 @@ namespace ComputerService.Core.MappingConfiguration
                     opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhoneNumber,
                     opt => opt.MapFrom(src => src.Customer.PhoneNumber))
-                .ForMember(dest => dest.PartsUsedInRepair,
+                .ForMember(dest => dest.UsedParts,
                     opt => opt.MapFrom(src => src.UsedParts))
                 .ForMember(dest => dest.RepairTypes,
                     opt => opt.MapFrom(src => src.RequiredRepairTypes))
                 .ForMember(dest => dest.RepairUsers,
                     opt => opt.MapFrom(src => src.EmployeeRepairs));
+            CreateMap<UsedPart, PartsUsedInRepair>()
+                .ForMember(dest => dest.Id,
+                    opt => opt.MapFrom(src => src.PartId))
+                .ForMember(dest => dest.Name,
+                    opt => opt.MapFrom(src => src.Part.Name))
+                .ForMember(dest => dest.Quantity,
+                    opt => opt.MapFrom(src => src.Quantity))
+                .ForMember(dest => dest.PartBoughtPrice,
+                    opt => opt.MapFrom(src => src.Part.PartBoughtPrice));
             CreateMap<EmployeeRepair, RepairUsers>()
                 .ForMember(dest => dest.UserId,
                     opt => opt.MapFrom(src => src.User.Id))

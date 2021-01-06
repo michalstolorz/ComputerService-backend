@@ -33,13 +33,13 @@ namespace ComputerService.Core.Services
             _userContextProvider = userContextProvider;
         }
 
-        public async Task AddEmployeeRepair(int repairId, CancellationToken cancellationToken)
+        public async Task<int> AddEmployeeRepair(int repairId, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
             await validator.ValidateAndThrowAsync(repairId, null, cancellationToken);
 
             var result = await _employeeRepairRepository.GetAsync(predicate: x => x.RepairId == repairId && x.UserId == (int)_userContextProvider.UserId, cancellationToken);
-            if(result != null)
+            if(result == null)
             {
                 throw new ServiceException(ErrorCodes.EmployeeAlreadyAssignToRepair, $"Employee with given id {(int)_userContextProvider.UserId}, already assign to repair with given id {repairId}");
             }
@@ -50,7 +50,9 @@ namespace ComputerService.Core.Services
                 RepairId = repairId
             };
 
-            await _employeeRepairRepository.AddAsync(employeeRepair, cancellationToken);
+            var addResult = await _employeeRepairRepository.AddAsync(employeeRepair, cancellationToken);
+
+            return addResult.Id;
         }
     }
 }

@@ -38,14 +38,14 @@ namespace ComputerService.Controllers
         [HttpPost("assignEmployeeToRepair/{repairId}")]
         public async Task<IActionResult> AssignEmployeeToRepair(int repairId, CancellationToken cancellationToken)
         {
-            await _employeeRepairService.AddEmployeeRepair(repairId, cancellationToken);
+            var result = await _employeeRepairService.AddEmployeeRepair(repairId, cancellationToken);
 
             var repair = await _repairService.GetRepairAsync(repairId, cancellationToken);
 
             if (repair.Status == EnumStatus.New)
                 await _repairService.UpdateRepairStatusAsync(new UpdateRepairStatusRequest { StatusId = (int)EnumStatus.InProgress, RepairId = repairId }, cancellationToken);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

@@ -64,7 +64,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepairsForAssign")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> GetRepairsForAssign(CancellationToken cancellationToken)
         {
             List<List<GetRepairsResponse>> list = new List<List<GetRepairsResponse>>
