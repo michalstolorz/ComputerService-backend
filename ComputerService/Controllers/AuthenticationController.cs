@@ -30,9 +30,10 @@ namespace ComputerService.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IUserContextProvider _userContextProvider;
 
         public AuthenticationController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager,
-            IMapper mapper, IConfiguration configuration, IDateTimeProvider dateTimeProvider)
+            IMapper mapper, IConfiguration configuration, IDateTimeProvider dateTimeProvider, IUserContextProvider userContextProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,6 +41,7 @@ namespace ComputerService.Controllers
             _mapper = mapper;
             _configuration = configuration;
             _dateTimeProvider = dateTimeProvider;
+            _userContextProvider = userContextProvider;
         }
 
         /// <summary>
@@ -90,5 +92,64 @@ namespace ComputerService.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("changePassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new ChangePasswordRequestValidator();
+            await validator.ValidateAndThrowAsync(request, null, cancellationToken);
+
+            var user = await _userManager.GetUserAsync(_userContextProvider.User);
+
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("resetPassword/{userId}")]
+        [Authorize(Roles="Admin")]
+        public async Task<IActionResult> ResetPassword(int userId, CancellationToken cancellationToken)
+        {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(userId, null, cancellationToken);
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, "mojeNaprawy2020");
+
+            return Ok(result);
+        }
     }
 }

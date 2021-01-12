@@ -38,6 +38,16 @@ namespace ComputerService.Core.Services
             _mapper = mapper;
             _userContextProvider = userContextProvider;
         }
+        
+        public async Task<UserModel> GetUserAsync(int userId, CancellationToken cancellationToken)
+        {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(userId, null, cancellationToken);
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return _mapper.Map<UserModel>(user);
+        }
 
         public async Task<List<GetCustomersResponse>> GetUsersFromRoleAsync(string role, CancellationToken cancellationToken)
         {
@@ -78,8 +88,7 @@ namespace ComputerService.Core.Services
             var employeesList = TransformListUserToResponse(await _userManager.GetUsersInRoleAsync("Employee"), "Employee");
             var bossList = TransformListUserToResponse(await _userManager.GetUsersInRoleAsync("Boss"), "Boss");
 
-            var userList = customersList.Concat(employeesList).ToList();
-            userList = userList.Concat(bossList).ToList();
+            var userList = customersList.Concat(employeesList).Concat(bossList).ToList();
 
             return userList;
         }
@@ -89,6 +98,25 @@ namespace ComputerService.Core.Services
             return await _userManager.GetUserAsync(_userContextProvider.User);
         }
 
+        public async Task UpdateUserInfoAsync(UpdateUserInfoRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new UpdateUserInfoRequestValidator(); 
+            await validator.ValidateAndThrowAsync(request, null, cancellationToken);
+
+            var userToUpdate = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if(userToUpdate == null)
+            {
+                throw new ServiceException(ErrorCodes.UserWithGivenIdNotFound, $"User with given id {request.UserId} not found");
+            }
+
+            userToUpdate.FirstName = request.FirstName;
+            userToUpdate.LastName = request.LastName;
+            userToUpdate.Email = request.Email;
+            userToUpdate.PhoneNumber = request.PhoneNumber;
+
+            await _userManager.UpdateAsync(userToUpdate);
+        }
+
         private List<GetUsersWithRolesResponse> TransformListUserToResponse(IList<User> users, string role)
         {
             List<GetUsersWithRolesResponse> userList = new List<GetUsersWithRolesResponse>();
@@ -96,6 +124,7 @@ namespace ComputerService.Core.Services
             {
                 GetUsersWithRolesResponse response = new GetUsersWithRolesResponse()
                 {
+                    UserId = user.Id,
                     UserName = user.FirstName + " " + user.LastName,
                     UserEmail = user.Email,
                     UserPhoneNumber = user.PhoneNumber,

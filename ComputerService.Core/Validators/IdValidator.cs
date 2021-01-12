@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ComputerService.Core.Validators
 {
-    class IdValidator : AbstractValidator<int>
+    public class IdValidator : AbstractValidator<int>
     {
         public IdValidator()
         {

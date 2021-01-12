@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
+using ComputerService.Core.Dto.Response;
 using ComputerService.Core.Interfaces.Services;
+using ComputerService.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +28,25 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getUser/{userId}")]
+        public async Task<IActionResult> GetUserById(int userId, CancellationToken cancellationToken)
+        {
+            var user = await _userService.GetUserAsync(userId, cancellationToken);
+
+            return Ok(user);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="role"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getUsersFromRole")]
+        [ProducesResponseType(typeof(IEnumerable<GetCustomersResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsersFromRole([FromQuery] string role, CancellationToken cancellationToken)
         {
             var result = await _userService.GetUsersFromRoleAsync(role, cancellationToken);
@@ -43,6 +61,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("checkUserInRole")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CheckUserInRole([FromQuery] string role, CancellationToken cancellationToken)
         {
             var result = await _userService.CheckUserInRoleAsync(role, cancellationToken);
@@ -56,6 +75,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("checkUserRole")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CheckUserRole(CancellationToken cancellationToken)
         {
             var result = await _userService.CheckUserRoleAsync(cancellationToken);
@@ -69,6 +89,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getUsersWithRoles")]
+        [ProducesResponseType(typeof(IEnumerable<GetUsersWithRolesResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsersWithRoles(CancellationToken cancellationToken)
         {
             var result = await _userService.GetUsersWithRolesAsync(cancellationToken);
@@ -82,11 +103,26 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getCurrentLoggedUser")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCurrentLoggedUser(CancellationToken cancellationToken)
         {
             var result = await _userService.GetCurrentLoggedUserAsync(cancellationToken);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut("updateUserInfo")]
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoRequest request, CancellationToken cancellationToken)
+        {
+            await _userService.UpdateUserInfoAsync(request, cancellationToken);
+
+            return Ok();
         }
     }
 }

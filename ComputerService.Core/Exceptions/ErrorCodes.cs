@@ -35,5 +35,7 @@
         public static string NotEnoughtPartsInWarehouse => "not_enought_parts_in_warehouse";
         public static string EmployeeAlreadyAssignToRepair => "employee_with_given_id_already_assign_to_given_repair";
         public static string UserNotAssignToAnyRole => "user_is_not_assign_to_any_role";
+        public static string UserWithGivenEmailNotFound => "user_with_given_email_not_found";
+        public static string UserWithGivenIdNotFound => "user_with_given_id_not_found";
     }
 }

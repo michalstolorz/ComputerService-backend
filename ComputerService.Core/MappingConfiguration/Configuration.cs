@@ -54,10 +54,8 @@ namespace ComputerService.Core.MappingConfiguration
             CreateMap<Repair, GetRepairsResponse>()
                 .ForMember(dest => dest.Status,
                     opt => opt.MapFrom(src => (EnumStatus)src.Status))
-                 .ForMember(dest => dest.CustomerFirstName,
-                    opt => opt.MapFrom(src => src.Customer.FirstName))
-                 .ForMember(dest => dest.CustomerLastName,
-                    opt => opt.MapFrom(src => src.Customer.LastName))
+                 .ForMember(dest => dest.CustomerName,
+                    opt => opt.MapFrom(src => src.Customer.FirstName + " " + src.Customer.LastName))
                  .ForMember(dest => dest.CustomerEmail,
                     opt => opt.MapFrom(src => src.Customer.Email))
                  .ForMember(dest => dest.CustomerPhoneNumber,
@@ -93,6 +91,7 @@ namespace ComputerService.Core.MappingConfiguration
                      opt => opt.MapFrom(src => src.Customer))
                  .ForMember(dest => dest.InvoiceModel,
                      opt => opt.MapFrom(src => src.Invoice));
+            CreateMap<User, UserModel>().ReverseMap();
         }
     }
 }
