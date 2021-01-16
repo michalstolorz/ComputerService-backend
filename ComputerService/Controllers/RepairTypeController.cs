@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("addRepairType")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> AddRepairType([FromBody] AddRepairTypeRequest request, CancellationToken cancellationToken)
         {
             var result = await _repairTypeService.AddRepairTypeAsync(request, cancellationToken);
@@ -42,6 +44,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepairType/{id}")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> GetRepairType(int id, CancellationToken cancellationToken)
         {
             var result = await _repairTypeService.GetRepairTypeAsync(id, cancellationToken);
@@ -56,6 +59,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepairTypes")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> GetRepairTypes([FromQuery] string repairTypeName, CancellationToken cancellationToken)
         {
             var result = await _repairTypeService.GetRepairTypesAsync(repairTypeName, cancellationToken);

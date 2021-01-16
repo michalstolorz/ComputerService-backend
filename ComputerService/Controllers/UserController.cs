@@ -32,6 +32,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getUser/{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(int userId, CancellationToken cancellationToken)
         {
             var user = await _userService.GetUserAsync(userId, cancellationToken);
@@ -89,6 +90,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getUsersWithRoles")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<GetUsersWithRolesResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsersWithRoles(CancellationToken cancellationToken)
         {
@@ -118,6 +120,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("updateUserInfo")]
+        [Authorize(Roles = "Admin, Employee, Customer, Boss")]
         public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoRequest request, CancellationToken cancellationToken)
         {
             await _userService.UpdateUserInfoAsync(request, cancellationToken);

@@ -13,5 +13,6 @@ namespace ComputerService.Core.Interfaces.Services
         Task<PartModel> AddPartAsync(AddPartRequest request, CancellationToken cancellationToken);
         Task<PartModel> GetPartAsync(int id, CancellationToken cancellationToken);
         Task<List<PartModel>> GetPartsAsync(string partName, CancellationToken cancellationToken);
+        Task SupplyPartAsync(SupplyPartRequest request, CancellationToken cancellationToken);
     }
 }

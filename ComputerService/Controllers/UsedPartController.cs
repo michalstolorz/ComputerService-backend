@@ -31,7 +31,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("updateRepairUsedParts")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> UpdateRepairUsedParts([FromBody] UpdateRepairUsedPartsRequest request, CancellationToken cancellationToken)
         {
             await _usedPartService.UpdateRepairUsedPartsAsync(request, cancellationToken);

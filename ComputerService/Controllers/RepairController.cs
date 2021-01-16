@@ -37,7 +37,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepair/{id}")]
-        [Authorize(Roles = "Admin, Employee, Customer")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(GetRepairDetailsResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRepair(int id, CancellationToken cancellationToken)
         {
@@ -53,11 +53,43 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("getRepairs")]
-        [Authorize(Roles = "Admin, Employee, Customer, Boss")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRepairs([FromQuery] GetRepairsRequest request, CancellationToken cancellationToken)
         {
             var result = await _repairService.GetRepairsAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getCustomerRepair/{id}")]
+        [Authorize(Roles = "Admin, Customer")]
+        [ProducesResponseType(typeof(GetRepairDetailsResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetCustomerRepair(int id, CancellationToken cancellationToken)
+        {
+            var result = await _repairService.GetCustomerRepairAsync(id, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getCustomerRepairs")]
+        [Authorize(Roles = "Admin, Customer")]
+        [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetCustomerRepairs(CancellationToken cancellationToken)
+        {
+            var result = await _repairService.GetCustomerRepairsAsync(cancellationToken);
 
             return Ok(result);
         }
@@ -84,11 +116,26 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("getRepairsForInvoices")]
+        [Authorize(Roles = "Admin, Boss")]
+        [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetRepairsForInvoices(CancellationToken cancellationToken)
+        {
+            var result = await _repairService.GetRepairsForInvoicesAsync(cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("addRepair")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CreateRepair(AddRepairRequest request, CancellationToken cancellationToken)
         {
@@ -108,7 +155,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("updateRepairDescription")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> UpdateRepairDescription([FromBody] UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
         {
             await _repairService.UpdateRepairDescriptionAsync(request, cancellationToken);
@@ -123,7 +170,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("evaluateRepairCost")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> EvaluateRepairCost([FromBody] EvaluateRepairCostRequest request, CancellationToken cancellationToken)
         {
             await _repairService.EvaluateRepairCostAsync(request, cancellationToken);
@@ -138,7 +185,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("updateRepairStatus")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(RepairModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateRepairStatus([FromBody] UpdateRepairStatusRequest request, CancellationToken cancellationToken)
         {

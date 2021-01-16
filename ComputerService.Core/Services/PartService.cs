@@ -83,5 +83,21 @@ namespace ComputerService.Core.Services
 
             return _mapper.Map<List<PartModel>>(result);
         }
+
+        public async Task SupplyPartAsync(SupplyPartRequest request, CancellationToken cancellationToken)
+        {
+            var validator = new SupplyPartRequestValidator();
+            await validator.ValidateAndThrowAsync(request, null, cancellationToken);
+
+            var partToUpdate = await _partRepository.GetByIdAsync(request.PartId, cancellationToken);
+            if(partToUpdate == null)
+            {
+                throw new ServiceException(ErrorCodes.PartWithGivenIdNotFound, $"Part with provided id doesn't exist");
+            }
+
+            partToUpdate.Quantity += request.Quantity;
+
+            await _partRepository.UpdateAsync(cancellationToken, partToUpdate);
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("registerUser")]
+        [Authorize(Roles = "Admin, Employee, Boss")]
         public async Task<IActionResult> RegisterUser(RegisterRequest request, CancellationToken cancellationToken)
         {
             var validator = new RegisterRequestValidator();

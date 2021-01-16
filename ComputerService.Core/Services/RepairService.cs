@@ -80,6 +80,33 @@ namespace ComputerService.Core.Services
             return _mapper.Map<GetRepairDetailsResponse>(result);
         }
 
+        public async Task<GetRepairDetailsResponse> GetCustomerRepairAsync(int id, CancellationToken cancellationToken)
+        {
+            var validator = new IdValidator();
+            await validator.ValidateAndThrowAsync(id, null, cancellationToken);
+
+            var result = await _repairRepository.GetAsync(predicate:
+                x => x.Id == id &&
+                x.CustomerId == _userContextProvider.UserId,
+                cancellationToken,
+                include: x => x
+                .Include(x => x.UsedParts)
+                    .ThenInclude(x => x.Part)
+                .Include(x => x.RequiredRepairTypes)
+                    .ThenInclude(x => x.RepairType)
+                .Include(x => x.Customer)
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User)
+                 .Include(x => x.Invoice));
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            return _mapper.Map<GetRepairDetailsResponse>(result.FirstOrDefault());
+        }
+
         public async Task<List<GetRepairsResponse>> GetRepairsByStatusAsync(int repairStatusId, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
@@ -109,6 +136,41 @@ namespace ComputerService.Core.Services
                 .Include(x => x.EmployeeRepairs)
                     .ThenInclude(x => x.User),
                 orderBy: x => x.OrderBy(x => x.Status));
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            return _mapper.Map<List<GetRepairsResponse>>(result);
+        }
+
+        public async Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(CancellationToken cancellationToken)
+        {
+            var result = await _repairRepository.GetAsync(predicate:
+                x => x.CustomerId == _userContextProvider.UserId,
+                cancellationToken,
+                include: x => x
+                .Include(x => x.Customer)
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User),
+                orderBy: x => x.OrderBy(x => x.Status));
+
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+            }
+
+            return _mapper.Map<List<GetRepairsResponse>>(result);
+        }
+
+        public async Task<List<GetRepairsResponse>> GetRepairsForInvoicesAsync(CancellationToken cancellationToken)
+        {
+            var result = await _repairRepository.GetAsync(predicate: x => x.Status != (EnumStatus)4 && x.RepairCost != null, cancellationToken,
+                include: x => x
+                .Include(x => x.Customer)
+                .Include(x => x.EmployeeRepairs)
+                    .ThenInclude(x => x.User));
 
             if (result == null)
             {

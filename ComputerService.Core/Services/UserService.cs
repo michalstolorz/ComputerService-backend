@@ -44,18 +44,26 @@ namespace ComputerService.Core.Services
             var validator = new IdValidator();
             await validator.ValidateAndThrowAsync(userId, null, cancellationToken);
 
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var result = await _userManager.FindByIdAsync(userId.ToString());
 
-            return _mapper.Map<UserModel>(user);
+            if (result == null)
+            {
+                throw new ServiceException(ErrorCodes.UserWithGivenIdNotFound, $"User with given id doesn't exist");
+            }
+
+            return _mapper.Map<UserModel>(result);
         }
 
         public async Task<List<GetCustomersResponse>> GetUsersFromRoleAsync(string role, CancellationToken cancellationToken)
         {
+            var validator = new StringValidator();
+            await validator.ValidateAndThrowAsync(role, null, cancellationToken);
+
             var result = await _userManager.GetUsersInRoleAsync(role);
 
             if (result == null)
             {
-                throw new ServiceException(ErrorCodes.CustomerWithGivenIdNotFound, $"Customer with provided id doesn't exist");
+                throw new ServiceException(ErrorCodes.UserWithGivenIdNotFound, $"User with given id doesn't exist");
             }
 
             return _mapper.Map<List<GetCustomersResponse>>(result);

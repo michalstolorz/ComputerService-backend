@@ -13,8 +13,11 @@ namespace ComputerService.Core.Interfaces.Services
     {
         Task<int> AddRepairAsync(AddRepairRequest request, CancellationToken cancelationToken);
         Task<GetRepairDetailsResponse> GetRepairAsync(int id, CancellationToken cancellationToken);
+        Task<GetRepairDetailsResponse> GetCustomerRepairAsync(int id, CancellationToken cancellationToken);
         Task<List<GetRepairsResponse>> GetRepairsByStatusAsync(int repairStatusId, CancellationToken cancellationToken);
         Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken);
+        Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(CancellationToken cancellationToken);
+        Task<List<GetRepairsResponse>> GetRepairsForInvoicesAsync(CancellationToken cancellationToken);
         //Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(int customerId, CancellationToken cancellationToken);
         Task UpdateRepairDescriptionAsync(UpdateRepairDescriptionRequest request, CancellationToken cancellationToken);
         Task EvaluateRepairCostAsync(EvaluateRepairCostRequest request, CancellationToken cancellationToken);

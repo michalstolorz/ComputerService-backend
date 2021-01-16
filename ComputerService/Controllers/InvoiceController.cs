@@ -45,7 +45,7 @@ namespace ComputerService.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("createInvoice/{repairId}")]
-        //[Authorize(Roles = "Admin, Boss")]
+        [Authorize(Roles = "Admin, Boss")]
         public async Task<IActionResult> CreateInvoice(int repairId, CancellationToken cancellationToken)
         {
             //Create PDF with PDF/A-3b conformance.
