@@ -44,7 +44,7 @@ namespace ComputerService.Core.Services
             var repairResult = await _repairRepository.GetByIdAsync(request.RepairId, cancellationToken);
             if (repairResult == null)
             {
-                throw new ServiceException(ErrorCodes.RepairTypeWithGivenIdNotFound, $"Repair with provided id doesn't exist");
+                throw new ServiceException(ErrorCodes.RepairWithGivenIdNotFound, $"Repair with provided id {request.RepairId} doesn't exist");
             }
 
             foreach (var repairTypeId in request.RepairTypeIds)
@@ -52,7 +52,7 @@ namespace ComputerService.Core.Services
                 var repairTypeResult = await _repairTypeRepository.GetByIdAsync(repairTypeId, cancellationToken);
                 if (repairTypeResult == null)
                 {
-                    throw new ServiceException(ErrorCodes.RepairTypeAlreadyAssignToRepair, $"Repair type with provided id {repairTypeId} doesn't exist");
+                    throw new ServiceException(ErrorCodes.RepairTypeWithGivenIdNotFound, $"Repair type with provided id {repairTypeId} doesn't exist");
                 }
 
                 if (await _requiredRepairTypeRepository.AnyAsync(x =>
