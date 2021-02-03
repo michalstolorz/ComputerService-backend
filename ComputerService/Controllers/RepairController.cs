@@ -31,11 +31,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get repair by given id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Repair id</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>GetRepairDetailsResponse</returns>
         [HttpGet("getRepair/{id}")]
         [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(GetRepairDetailsResponse), (int)HttpStatusCode.OK)]
@@ -47,11 +47,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get all repairs which match the predicate
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with params for create a predicate</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Collection of GetRepairsResponse</returns>
         [HttpGet("getRepairs")]
         [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
@@ -63,11 +63,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get repair by given id for currently logged customer
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Repair id</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>GetRepairDetailsResponse</returns>
         [HttpGet("getCustomerRepair/{id}")]
         [Authorize(Roles = "Admin, Customer")]
         [ProducesResponseType(typeof(GetRepairDetailsResponse), (int)HttpStatusCode.OK)]
@@ -79,10 +79,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get all repairs for currently logged customer
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Collection of GetRepairsResponse</returns>
         [HttpGet("getCustomerRepairs")]
         [Authorize(Roles = "Admin, Customer")]
         [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
@@ -94,10 +94,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get collection of repairs with statuses: New, InProgress, ForCustomerApproval
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Concated list of GetRepairsResponse of all repairs with all 3 repair statuses</returns>
         [HttpGet("getRepairsForAssign")]
         [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
@@ -113,10 +113,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get collection of repairs with statuses: New, InProgress, ForCustomerApproval and non-zero repair cost
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Concated list of GetRepairsResponse of all repairs with all 3 repair statuses non-zero repair cost</returns>
         [HttpGet("getRepairsForInvoices")]
         [Authorize(Roles = "Admin, Boss")]
         [ProducesResponseType(typeof(IEnumerable<GetRepairsResponse>), (int)HttpStatusCode.OK)]
@@ -128,15 +128,15 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add repair with params given in request
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with customer id, repair description and repair type ids</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Id of newly added reapair</returns>
         [HttpPost("addRepair")]
         [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateRepair(AddRepairRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddRepair(AddRepairRequest request, CancellationToken cancellationToken)
         {
             var resultId = await _repairService.AddRepairAsync(request, cancellationToken);
 
@@ -148,9 +148,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update repair description by new description in request
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with repair id and new description</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateRepairDescription")]
@@ -164,9 +164,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update repair cost in repair model
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with repair id and repair cost</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("evaluateRepairCost")]
@@ -180,11 +180,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update repair status in repair model
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with repair id and repair status</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Updated repair model</returns>
         [HttpPut("updateRepairStatus")]
         [Authorize(Roles = "Admin, Employee, Boss")]
         [ProducesResponseType(typeof(RepairModel), (int)HttpStatusCode.OK)]

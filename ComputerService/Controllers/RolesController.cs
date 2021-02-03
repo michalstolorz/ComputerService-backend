@@ -29,9 +29,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get all roles
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Collection of all roles</returns>
         [HttpGet("getRoles")]
         [ProducesResponseType(typeof(IEnumerable<RoleResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRoles()
@@ -42,10 +42,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add new role
         /// </summary>
-        /// <param name="roleName"></param>
-        /// <returns></returns>
+        /// <param name="roleName">String for add</param>
+        /// <returns>Newly added role</returns>
         [HttpPost("addNewRole")]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(RoleResponse), (int)HttpStatusCode.OK)]
@@ -62,10 +62,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get all roles from given user
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <param name="userId">User id for getting its roles</param>
+        /// <returns>Collection of role name and its id</returns>
         [HttpGet("getUserRoles")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<RoleResponse>), (int)HttpStatusCode.OK)]
@@ -87,9 +87,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add user to role
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with user id and role</param>
         /// <returns></returns>
         [HttpPut("addUserToRoles")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -113,9 +113,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Remove user from role
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with user id and role id</param>
         /// <returns></returns>
         [HttpPut("removeUserFromRole")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]

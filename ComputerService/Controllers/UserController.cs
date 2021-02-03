@@ -27,11 +27,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get user by given id
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userId">Id of searched user</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>User model with matching id</returns>
         [HttpGet("getUser/{userId}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(UserModel), (int)HttpStatusCode.OK)]
@@ -43,11 +43,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Gets all user by given role
         /// </summary>
-        /// <param name="role"></param>
+        /// <param name="role">Role of searched users</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>List of GetCustomersResponse which contain user id, first and last name, email, phone number</returns>
         [HttpGet("getUsersFromRole")]
         [ProducesResponseType(typeof(IEnumerable<GetCustomersResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsersFromRole([FromQuery] string role, CancellationToken cancellationToken)
@@ -58,11 +58,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Check if user is in given role
         /// </summary>
-        /// <param name="role"></param>
+        /// <param name="role">Role for check</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>True or false depending on the check</returns>
         [HttpGet("checkUserInRole")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CheckUserInRole([FromQuery] string role, CancellationToken cancellationToken)
@@ -73,10 +73,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Chceck user role
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Role name assigned to current logged user</returns>
         [HttpGet("checkUserRole")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CheckUserRole(CancellationToken cancellationToken)
@@ -87,10 +87,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Gets collection of users from roles: customer, employee, boss
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Collection of responses which contains user id, name, email, phone number, role name</returns>
         [HttpGet("getUsersWithRoles")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<GetUsersWithRolesResponse>), (int)HttpStatusCode.OK)]
@@ -102,10 +102,10 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get current logged user
         /// </summary>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>User model</returns>
         [HttpGet("getCurrentLoggedUser")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCurrentLoggedUser(CancellationToken cancellationToken)
@@ -116,9 +116,9 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update user info by new params given in request
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Requesst with user id, first and last name, email, phone number</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateUserInfo")]

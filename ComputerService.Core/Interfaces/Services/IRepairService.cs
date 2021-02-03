@@ -18,7 +18,6 @@ namespace ComputerService.Core.Interfaces.Services
         Task<List<GetRepairsResponse>> GetRepairsAsync(GetRepairsRequest request, CancellationToken cancellationToken);
         Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(CancellationToken cancellationToken);
         Task<List<GetRepairsResponse>> GetRepairsForInvoicesAsync(CancellationToken cancellationToken);
-        //Task<List<GetRepairsResponse>> GetCustomerRepairsAsync(int customerId, CancellationToken cancellationToken);
         Task UpdateRepairDescriptionAsync(UpdateRepairDescriptionRequest request, CancellationToken cancellationToken);
         Task EvaluateRepairCostAsync(EvaluateRepairCostRequest request, CancellationToken cancellationToken);
         Task<RepairModel> UpdateRepairStatusAsync(UpdateRepairStatusRequest request, CancellationToken cancellationToken);

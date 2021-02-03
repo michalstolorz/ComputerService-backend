@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -45,12 +46,15 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Generates and returns JWT Token for authorization.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with credentials email and password</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>A newly created JWT token</returns>
         [HttpPost("login")]
+        [ProducesResponseType(typeof(LoginResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
         {
             var validator = new LoginRequestValidator();
@@ -81,10 +85,11 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Logout
         /// </summary>
         /// <returns></returns>
         [HttpPost("logout")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -93,12 +98,15 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Change password
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Request with old password, new password and new password confirmation</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("changePassword")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken)
         {
@@ -127,13 +135,13 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Reset password
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userId">User id for which to reset the password</param>
         /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
-        /// <returns></returns>
+        /// <returns>Identity result</returns>
         [HttpPost("resetPassword/{userId}")]
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ResetPassword(int userId, CancellationToken cancellationToken)
         {
             var validator = new IdValidator();
