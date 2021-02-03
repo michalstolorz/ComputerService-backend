@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ComputerService.Core.Dto.Request;
 using ComputerService.Core.Dto.Response;
 using ComputerService.Core.Interfaces.Services;
+using ComputerService.Core.Models;
 using ComputerService.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,10 +30,11 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getUser/{userId}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(UserModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUserById(int userId, CancellationToken cancellationToken)
         {
             var user = await _userService.GetUserAsync(userId, cancellationToken);
@@ -44,7 +46,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="role"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getUsersFromRole")]
         [ProducesResponseType(typeof(IEnumerable<GetCustomersResponse>), (int)HttpStatusCode.OK)]
@@ -59,7 +61,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="role"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("checkUserInRole")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
@@ -73,7 +75,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("checkUserRole")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
@@ -87,7 +89,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getUsersWithRoles")]
         [Authorize(Roles = "Admin")]
@@ -102,7 +104,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getCurrentLoggedUser")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
@@ -117,10 +119,11 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateUserInfo")]
         [Authorize(Roles = "Admin, Employee, Customer, Boss")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoRequest request, CancellationToken cancellationToken)
         {
             await _userService.UpdateUserInfoAsync(request, cancellationToken);

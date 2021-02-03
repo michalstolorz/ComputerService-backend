@@ -48,7 +48,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
@@ -96,7 +96,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("changePassword")]
         [Authorize]
@@ -130,7 +130,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("resetPassword/{userId}")]
         [Authorize(Roles="Admin")]

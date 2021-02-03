@@ -18,6 +18,7 @@ using System.IO;
 using Syncfusion.Pdf.Grid;
 using ComputerService.Core.Models;
 using ComputerService.Core.Interfaces.Repositories;
+using System.Net;
 
 namespace ComputerService.Controllers
 {
@@ -39,13 +40,14 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Create invoice for given repair
         /// </summary>
-        /// <param name="repairId"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="repairId">Repair id for creating invoice</param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("createInvoice/{repairId}")]
         [Authorize(Roles = "Admin, Boss")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> CreateInvoice(int repairId, CancellationToken cancellationToken)
         {
             //Create PDF with PDF/A-3b conformance.

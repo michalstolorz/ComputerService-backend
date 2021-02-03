@@ -34,7 +34,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getRepair/{id}")]
         [Authorize(Roles = "Admin, Employee, Boss")]
@@ -50,7 +50,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getRepairs")]
         [Authorize(Roles = "Admin, Employee, Boss")]
@@ -66,7 +66,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getCustomerRepair/{id}")]
         [Authorize(Roles = "Admin, Customer")]
@@ -81,8 +81,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getCustomerRepairs")]
         [Authorize(Roles = "Admin, Customer")]
@@ -97,7 +96,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getRepairsForAssign")]
         [Authorize(Roles = "Admin, Employee, Boss")]
@@ -116,7 +115,7 @@ namespace ComputerService.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpGet("getRepairsForInvoices")]
         [Authorize(Roles = "Admin, Boss")]
@@ -132,7 +131,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("addRepair")]
         [Authorize(Roles = "Admin, Employee, Boss")]
@@ -152,10 +151,11 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateRepairDescription")]
         [Authorize(Roles = "Admin, Employee, Boss")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateRepairDescription([FromBody] UpdateRepairDescriptionRequest request, CancellationToken cancellationToken)
         {
             await _repairService.UpdateRepairDescriptionAsync(request, cancellationToken);
@@ -167,10 +167,11 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("evaluateRepairCost")]
         [Authorize(Roles = "Admin, Employee, Boss")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> EvaluateRepairCost([FromBody] EvaluateRepairCostRequest request, CancellationToken cancellationToken)
         {
             await _repairService.EvaluateRepairCostAsync(request, cancellationToken);
@@ -182,7 +183,7 @@ namespace ComputerService.Controllers
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateRepairStatus")]
         [Authorize(Roles = "Admin, Employee, Boss")]

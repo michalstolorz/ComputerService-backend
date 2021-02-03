@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ComputerService.Core.Dto.Response;
+using System.Net;
 
 namespace ComputerService.Controllers
 {
@@ -25,13 +26,14 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add used part and updating quantity in part table
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="request">Request with repair id, part id and used part quantity</param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPut("updateRepairUsedParts")]
         [Authorize(Roles = "Admin, Employee, Boss")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateRepairUsedParts([FromBody] UpdateRepairUsedPartsRequest request, CancellationToken cancellationToken)
         {
             await _usedPartService.UpdateRepairUsedPartsAsync(request, cancellationToken);

@@ -30,12 +30,13 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Adds EmployeeRepair with given repairId and current logged employee. Changes repair status to InProgress
         /// </summary>
-        /// <param name="repairId"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="repairId">Repair id to which assign employee</param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
+        /// <returns>Returns new added EmployeeRepair id</returns>
         [HttpPost("assignEmployeeToRepair/{repairId}")]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> AssignEmployeeToRepair(int repairId, CancellationToken cancellationToken)
         {
             var result = await _employeeRepairService.AddEmployeeRepair(repairId, cancellationToken);

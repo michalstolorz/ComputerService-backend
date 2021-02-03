@@ -33,6 +33,7 @@ namespace ComputerService.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getRoles")]
+        [ProducesResponseType(typeof(IEnumerable<RoleResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRoles()
         {
             var roles = await _roleManager.Roles.ToListAsync();
@@ -46,6 +47,8 @@ namespace ComputerService.Controllers
         /// <param name="roleName"></param>
         /// <returns></returns>
         [HttpPost("addNewRole")]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(RoleResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddNewRole([FromBody] string roleName)
         {
             var role = new Role { Name = roleName };
@@ -64,6 +67,8 @@ namespace ComputerService.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("getUserRoles")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<RoleResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUserRoles(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -87,6 +92,9 @@ namespace ComputerService.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("addUserToRoles")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddUserToRole(AddUserToRolesRequest request)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
@@ -110,6 +118,9 @@ namespace ComputerService.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("removeUserFromRole")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> RemoveUserFromRole(RemoveUserFromRoleRequest request)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());

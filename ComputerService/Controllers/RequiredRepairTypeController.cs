@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ComputerService.Core.Dto.Response;
+using System.Net;
 
 namespace ComputerService.Controllers
 {
@@ -25,12 +26,13 @@ namespace ComputerService.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add multiple RequiredRepairType with given repair id and repair type id
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="request">Request with repair id and list of repair type ids</param>
+        /// <param name="cancellationToken">Propagates notification that operation should be canceled</param>
         /// <returns></returns>
         [HttpPost("assignRepairTypeToRepair")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AssignRepairTypeToRepair([FromBody] AssignRepairTypeToRepairRequest request, CancellationToken cancellationToken)
         {
             await _requiredRepairTypeService.AssignRepairTypeToRepairAsync(request, cancellationToken);
